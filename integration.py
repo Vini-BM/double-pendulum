@@ -1,35 +1,44 @@
 import numpy as np
 
-
 def fTheta1(theta1,theta2,dtheta1,dtheta2,g,l1,l2,m1,m2):
+    """
+    Returns the second time derivative of $\theta_1$.
+    """
     beta = m2/(m1+m2*np.sin(theta1-theta2)**2)
     g_term = -g/l1 * (np.sin(theta1)*(1+beta*np.cos(theta1-theta2)**2) - beta*np.sin(theta2)*np.cos(theta1-theta2)) # term with gravity
     dtheta1_term = -beta*np.cos(theta1-theta2)*np.sin(theta1-theta2)*dtheta1**2 # term with angular velocity for theta1
     dtheta2_term = -m2/(m1+m2) * np.sin(theta1-theta2)*dtheta2**2 * (beta*np.cos(theta1-theta2)**2 + l2/l1) # same for theta2
-    #simple = -g/l1 * np.sin(theta1) # term from simple pendulum
-    #coupling = -(m2/(m1+m2)*l2/l1) * (np.cos(theta1-theta2)*dw2 + np.sin(theta1-theta2)*w2**2) # term from coupling
     return g_term + dtheta1_term + dtheta2_term
 
 def fTheta2(theta1,theta2,dtheta1,dtheta2,g,l1,l2,m1,m2):
+    """
+    Returns the second time derivative of $\theta_2$
+    """
     alpha = (m1+m2)/(m1+m2*np.sin(theta1-theta2)**2)
     g_term = g/l2 * (np.sin(theta1)*np.cos(theta1-theta2)-np.sin(theta2)) # term with gravity
     dtheta1_term = l1/l2 * np.sin(theta1-theta2)*dtheta1**2 # term with angular velocity for theta1
     dtheta2_term = m2/(m1+m2) * np.sin(theta1-theta2)*np.cos(theta1-theta2)*dtheta2**2 # same for theta2
-    #simple = -g/l2 * np.sin(theta2)
-    #coupling = -l1/l2 * (np.cos(theta1-theta2)*dw1 - np.sin(theta1-theta2)*w1**2)
     return alpha * (g_term + dtheta1_term + dtheta2_term)
 
-def integrate(theta1,theta2,dtheta1,dtheta2,tmax,dt,g,l1,l2,m1,m2):
+def integrate(theta1,theta2,dtheta1,dtheta2,tmax,g,l1,l2,m1,m2):
+    """
+    Integrates the equations of motion using classic RK4, adpated for second-order ODEs.
+    """
+
     # Initialize time
     t = 0
-    # Initialize lists
+    dt = 0.01 # suitable dt (if bigger, the error will be significant)
+
+    # Initialize lists for return
     theta1_list = [theta1]
     theta2_list = [theta2]
     dtheta1_list = [theta1]
     dtheta2_list = [theta2]
     t_list = [t]
-    # Useful coefficient
+
+    # Useful coefficient for RK4
     h = dt/2
+    
     # Loop
     while t < tmax:
 
