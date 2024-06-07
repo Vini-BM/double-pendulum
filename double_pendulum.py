@@ -9,7 +9,7 @@ def main(theta1,theta2,dtheta1,dtheta2,m1=1.,m2=1.,l1=1.,l2=1.,g=9.8,tmax=10):
     lmax = l1+l2
     t1_list, t2_list, d1_list, d2_list, time = integrate(theta1,theta2,dtheta1,dtheta2,tmax,g,l1,l2,m1,m2)
     pendulum = trajectory(t1_list,t2_list,m1,m2,l1,l2,g,time)
-    pendulum.save('doublePendulum.gif',writer=PillowWriter(fps=30))
+    #pendulum.save('doublePendulum.gif',writer=PillowWriter(fps=30)) # uncomment if you want to save animation
 
 if __name__ == '__main__':
     if len(argv) == 1:
